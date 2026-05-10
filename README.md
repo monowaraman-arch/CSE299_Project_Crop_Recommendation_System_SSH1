@@ -1,9 +1,13 @@
 # Crop Recommendation System
 
 ## Overview
-This project is a machine learning based crop recommendation system built with Python, Flask, and scikit-learn. It predicts the most suitable crop from soil and environmental conditions entered by the user.
+This project is a machine learning based crop recommendation system built with Python, Flask, SQLite, and scikit-learn. It predicts suitable crops from soil nutrients and environmental measurements entered by the user.
 
-The system uses the following input features:
+The app now returns a richer recommendation result instead of only one crop name. It shows the top 3 crops, confidence scores, crop images, ideal growing conditions, cultivation notes, downloadable PDF reports, model analysis pages, and saved prediction history.
+
+## Input Features
+The model uses 7 input features:
+
 - Nitrogen (`N`)
 - Phosphorus (`P`)
 - Potassium (`K`)
@@ -12,40 +16,102 @@ The system uses the following input features:
 - pH
 - Rainfall
 
-The predicted output is one of 22 crop classes, such as Rice, Coconut, Mango, Coffee, and others.
+The predicted output is one of 22 crop classes, including Rice, Maize, Coconut, Papaya, Mango, Coffee, and others.
 
-## Main Components
-- `app.py`: Flask application for loading the trained model, accepting form input, running prediction, and showing the result.
-- `templates/index.html`: User interface for entering field values and displaying the recommended crop.
-- `Crop Classification With Recommendation System.ipynb`: Jupyter notebook used for dataset review, feature analysis, preprocessing, model comparison, and training.
-- `Crop_recommendation.csv`: Dataset used for training and evaluation.
-- `model.pkl`, `minmaxscaler.pkl`, `standscaler.pkl`: Saved model and preprocessing artifacts.
-- `static/crops/`: Local crop images shown in the result card.
+## Main Features
+- Top 3 crop recommendations
+- Confidence score for each crop
+- Crop image preview for each recommendation
+- Ideal growing conditions for each crop
+- Short cultivation note for each crop
+- Input range hints based on the CSV dataset
+- Backend validation that blocks unrealistic values such as invalid pH values
+- Downloadable PDF recommendation report
+- SQLite prediction history
+- Separate Prediction History page with crop images and saved inputs
+- Model Information page with dataset, preprocessing, model, accuracy, and feature importance
+- Model Comparison page with classifier accuracy ranking
+- Automatic fallback crop image if a crop-specific image is missing
+- Automatic model/scaler rebuild from the CSV if saved pickle files are incompatible
+
+## Application Pages
+After running the Flask app, these routes are available:
+
+```text
+http://127.0.0.1:5001/
+http://127.0.0.1:5001/model-info
+http://127.0.0.1:5001/model-comparison
+http://127.0.0.1:5001/prediction-history
+```
+
+The main predictor page includes quick navigation buttons for:
+
+- Model Info
+- Compare Models
+- History
+
+## Application Screenshots
+
+### 1. Home Page
+![Home Page](Screenshots/Home-page.png)
+
+### 2. Prediction Result
+![Prediction Result](Screenshots/prediction-result.png)
+
+### 3. Model Information Page
+![Model Information Page](Screenshots/Model-info-page.png)
+
+### 4. Model Comparison Page
+![Model Comparison Page](Screenshots/compare-models-page.png)
+
+### 5. Prediction History Page
+![Prediction History Page](Screenshots/prediction-history-page.png)
 
 ## Dataset Summary
 The dataset contains:
+
 - `2200` rows
 - `8` columns
 - `7` input features
 - `1` target column: `label`
+- `22` crop classes
+- `100` samples per crop class
 
-Dataset quality checks in the notebook showed:
+Dataset quality checks showed:
+
 - no missing values
 - no duplicate rows
-- balanced classes, with `100` samples for each crop
+- balanced crop classes
+
+## Accepted Input Ranges
+The app displays these ranges under the input fields and validates them before prediction:
+
+| Field | Accepted range |
+| --- | --- |
+| Nitrogen | 0 - 140 |
+| Phosphorus | 5 - 145 |
+| Potassium | 5 - 205 |
+| Temperature | 8.83 - 43.68 C |
+| Humidity | 14.26% - 99.98% |
+| pH | 3.5 - 9.94 |
+| Rainfall | 20.21 - 298.56 mm |
+
+These limits come from `Crop_recommendation.csv`.
 
 ## Machine Learning Workflow
 The notebook performs the following steps:
+
 - load and inspect the dataset
 - check data types, null values, and duplicates
 - analyze feature ranges and class distribution
 - encode crop labels into numeric classes
 - split the dataset into training and testing sets
-- scale the features using `MinMaxScaler` and `StandardScaler`
+- scale features using `MinMaxScaler` and `StandardScaler`
 - train and compare multiple classification algorithms
-- save the final trained model and scaler files for deployment
+- save the final trained model and scaler files for Flask deployment
 
-Models compared in the notebook include:
+Models compared include:
+
 - Logistic Regression
 - Gaussian Naive Bayes
 - Support Vector Machine
@@ -57,48 +123,103 @@ Models compared in the notebook include:
 - Gradient Boosting
 - Extra Trees
 
-## Web Application Features
-- simple form-based crop recommendation
-- input validation for required numeric fields
-- prediction result displayed in the UI
-- crop-specific image support from the local `static/crops` folder
-- automatic fallback to `default` crop image if a specific one is missing
-- automatic rebuilding of model artifacts from the dataset if incompatible pickle files are detected
+## Recommendation Output
+For every successful prediction, the app shows:
 
-## Application Preview
-![Crop recommendation result page](Screenshots/crop-recommendation-result-page.png)
+- top 3 crop matches
+- prediction confidence percentage
+- crop image
+- N-P-K, temperature, humidity, pH, and rainfall ideal ranges
+- cultivation note
+- PDF report download button
+
+The PDF report includes:
+
+- entered field values
+- generated date and time
+- top crop recommendations
+- confidence scores
+- ideal conditions
+- cultivation notes
+
+## Prediction History
+Prediction history is stored locally in SQLite.
+
+The app creates this database file automatically:
+
+```text
+prediction_history.db
+```
+
+Each saved prediction stores:
+
+- date and time
+- entered N, P, K, temperature, humidity, pH, and rainfall values
+- top recommended crop
+- confidence score
+- top 3 recommendation details
+
+The history can be viewed at:
+
+```text
+http://127.0.0.1:5001/prediction-history
+```
+
+The SQLite database file is ignored by Git using `.gitignore`, so local history does not get pushed to GitHub.
 
 ## Project Structure
 ```text
 .
-├── app.py
-├── Crop Classification With Recommendation System.ipynb
-├── Crop_recommendation.csv
-├── model.pkl
-├── minmaxscaler.pkl
-├── standscaler.pkl
-├── requirements.txt
-├── templates/
-│   └── index.html
-└── static/
-    └── crops/
+|-- app.py
+|-- Crop Classification With Recommendation System.ipynb
+|-- Crop_recommendation.csv
+|-- model.pkl
+|-- minmaxscaler.pkl
+|-- standscaler.pkl
+|-- requirements.txt
+|-- README.md
+|-- Screenshots/
+|   |-- Home-page.png
+|   |-- prediction-result.png
+|   |-- Model-info-page.png
+|   |-- compare-models-page.png
+|   `-- prediction-history-page.png
+|-- templates/
+|   |-- index.html
+|   |-- model_info.html
+|   |-- model_comparison.html
+|   `-- prediction_history.html
+`-- static/
+    `-- crops/
+```
+
+Generated locally:
+
+```text
+prediction_history.db
 ```
 
 ## Installation
 Open the project folder in PowerShell or the VS Code terminal, then install the dependencies:
 
 ```powershell
-& "C:\Users\user\AppData\Local\Programs\Python\Python312\python.exe" -m pip install -r requirements.txt
-```
-
-If `python` works normally on your machine, this also works:
-
-```powershell
 python -m pip install -r requirements.txt
 ```
 
+If your machine needs the full Python path, use:
+
+```powershell
+& "C:\Users\user\AppData\Local\Programs\Python\Python312\python.exe" -m pip install -r requirements.txt
+```
+
 ## Run the Application
-Start the Flask app with:
+Start the Flask app:
+
+```powershell
+python app.py
+```
+
+Or with the full Python path:
 
 ```powershell
 & "C:\Users\user\AppData\Local\Programs\Python\Python312\python.exe" app.py
@@ -113,13 +234,15 @@ http://127.0.0.1:5001
 ## Crop Images
 Crop result images are loaded from `static/crops/`.
 
-The app supports these file extensions:
+Supported file extensions:
+
 - `.png`
 - `.jpg`
 - `.jpeg`
 - `.webp`
 
 Use the crop name as the image filename. Examples:
+
 - `rice.png`
 - `coconut.png`
 - `mango.png`
@@ -128,6 +251,7 @@ Use the crop name as the image filename. Examples:
 If a crop image is not found, the app falls back to a default image.
 
 Expected crop image base names:
+
 - `rice`
 - `maize`
 - `jute`
@@ -145,21 +269,23 @@ Expected crop image base names:
 - `lentil`
 - `blackgram`
 - `mungbean`
-- `mothbeans`
+- `mothbean`
 - `pigeonpeas`
 - `kidneybeans`
 - `chickpea`
 - `coffee`
 
-## Notes
-- The web app predicts one crop label from 7 user inputs.
-- The model artifacts can be regenerated automatically from the CSV if older pickle files are incompatible with the installed scikit-learn version.
-- The current Flask setup uses `debug=True`, which is fine for development but should be changed before deployment.
-
 ## Requirements
-Dependencies are listed in [`requirements.txt`](/c:/Users/user/Downloads/Lecture%20Slides%20of%20Semesters/Spring26%20-%20261/CSE299%20-%20Junior%20Design/Crop-Recommendation-System-Using-Machine-Learning-main/Crop-Recommendation-System-Using-Machine-Learning-main/requirements.txt):
+Dependencies are listed in `requirements.txt`:
+
 - Flask
 - NumPy
 - Pandas
 - scikit-learn
 
+SQLite is used through Python's built-in `sqlite3` module, so no extra package is required for prediction history.
+
+## Notes
+- The app is configured for local development at `127.0.0.1:5001`.
+- `debug=True` is useful during development but should be disabled before deployment.
+- The recommendation is decision support only. Real farming decisions should also consider local agronomy advice, soil tests, market conditions, and seasonal context.

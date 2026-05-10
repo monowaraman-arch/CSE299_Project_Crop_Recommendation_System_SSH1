@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Model Comparison - Crop Recommendation System</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Outfit:wght@500;700;800&display=swap"
+		rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+	<style>
+		:root {
+			--panel-bg: rgba(248, 250, 245, 0.94);
+			--text-dark: #173120;
+			--text-soft: #5a6f60;
+			--accent: #2f9e44;
+			--accent-dark: #1f7a34;
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			min-height: 100vh;
+			margin: 0;
+			font-family: "DM Sans", sans-serif;
+			color: var(--text-dark);
+			background:
+				linear-gradient(135deg, rgba(9, 20, 12, 0.76), rgba(18, 47, 26, 0.46)),
+				url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1800&q=80") center center / cover no-repeat fixed;
+		}
+
+		.page-shell {
+			min-height: 100vh;
+			padding: 32px 16px;
+		}
+
+		.comparison-shell {
+			width: 100%;
+			max-width: 1120px;
+			margin: 0 auto;
+			padding: 34px;
+			border-radius: 24px;
+			background: var(--panel-bg);
+			box-shadow: 0 30px 80px rgba(0, 0, 0, 0.32);
+			backdrop-filter: blur(10px);
+		}
+
+		.page-top {
+			display: flex;
+			align-items: flex-start;
+			justify-content: space-between;
+			gap: 20px;
+			margin-bottom: 28px;
+		}
+
+		.section-tag {
+			color: var(--accent-dark);
+			font-weight: 800;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			font-size: 0.82rem;
+		}
+
+		h1,
+		h2 {
+			font-family: "Outfit", sans-serif;
+		}
+
+		h1 {
+			margin: 8px 0 8px;
+			font-size: clamp(2rem, 4vw, 3.3rem);
+		}
+
+		.lead-text {
+			max-width: 720px;
+			margin: 0;
+			color: var(--text-soft);
+		}
+
+		.page-actions {
+			display: flex;
+			gap: 10px;
+			flex-wrap: wrap;
+			justify-content: flex-end;
+		}
+
+		.nav-link-button {
+			color: #fff;
+			background: var(--accent-dark);
+			border-radius: 14px;
+			padding: 12px 16px;
+			font-weight: 800;
+			text-decoration: none;
+			white-space: nowrap;
+		}
+
+		.nav-link-button:hover {
+			color: #fff;
+			background: var(--accent);
+		}
+
+		.summary-grid {
+			display: grid;
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			gap: 14px;
+			margin-bottom: 22px;
+		}
+
+		.summary-box,
+		.comparison-panel {
+			border: 1px solid rgba(31, 122, 52, 0.1);
+			border-radius: 14px;
+			background: rgba(255, 255, 255, 0.78);
+			box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62);
+		}
+
+		.summary-box {
+			padding: 18px;
+		}
+
+		.summary-label {
+			display: block;
+			color: var(--text-soft);
+			font-size: 0.78rem;
+			font-weight: 800;
+			letter-spacing: 0.06em;
+			text-transform: uppercase;
+		}
+
+		.summary-value {
+			display: block;
+			margin-top: 8px;
+			font-family: "Outfit", sans-serif;
+			font-size: 1.35rem;
+			font-weight: 800;
+			color: var(--text-dark);
+			line-height: 1.15;
+		}
+
+		.comparison-panel {
+			padding: 24px;
+		}
+
+		.comparison-panel h2 {
+			margin: 0 0 16px;
+			font-size: 1.35rem;
+		}
+
+		.model-row {
+			display: grid;
+			grid-template-columns: 44px minmax(180px, 0.8fr) minmax(240px, 1.4fr) 78px;
+			gap: 14px;
+			align-items: center;
+			padding: 14px 0;
+			border-top: 1px solid rgba(31, 122, 52, 0.1);
+		}
+
+		.model-row:first-of-type {
+			border-top: none;
+		}
+
+		.rank {
+			width: 34px;
+			height: 34px;
+			border-radius: 50%;
+			display: grid;
+			place-items: center;
+			color: #fff;
+			background: var(--accent-dark);
+			font-weight: 800;
+		}
+
+		.model-name {
+			font-weight: 800;
+		}
+
+		.current-badge {
+			display: inline-block;
+			margin-left: 8px;
+			border-radius: 999px;
+			padding: 4px 8px;
+			color: var(--accent-dark);
+			background: rgba(47, 158, 68, 0.12);
+			font-size: 0.75rem;
+			font-weight: 800;
+		}
+
+		.accuracy-track {
+			height: 12px;
+			border-radius: 999px;
+			background: rgba(31, 122, 52, 0.12);
+			overflow: hidden;
+		}
+
+		.accuracy-fill {
+			height: 100%;
+			border-radius: inherit;
+			background: linear-gradient(90deg, var(--accent), #76c043);
+		}
+
+		.accuracy-value {
+			font-weight: 800;
+			color: var(--accent-dark);
+			text-align: right;
+		}
+
+		.note-text {
+			margin: 18px 0 0;
+			color: var(--text-soft);
+			font-size: 0.95rem;
+		}
+
+		@media (max-width: 991.98px) {
+			.summary-grid {
+				grid-template-columns: 1fr 1fr;
+			}
+
+			.model-row {
+				grid-template-columns: 38px minmax(0, 1fr) 70px;
+			}
+
+			.accuracy-track {
+				grid-column: 2 / -1;
+			}
+		}
+
+		@media (max-width: 575.98px) {
+			.page-shell {
+				padding: 14px;
+			}
+
+			.comparison-shell {
+				padding: 22px 16px;
+			}
+
+			.page-top,
+			.summary-grid,
+			.model-row {
+				display: grid;
+				grid-template-columns: 1fr;
+			}
+
+			.page-actions {
+				justify-content: stretch;
+			}
+
+			.nav-link-button {
+				text-align: center;
+			}
+
+			.accuracy-track {
+				grid-column: auto;
+			}
+
+			.accuracy-value {
+				text-align: left;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<main class="page-shell">
+		<section class="comparison-shell">
+			<div class="page-top">
+				<div>
+					<div class="section-tag">Crop Recommendation System</div>
+					<h1>Model comparison</h1>
+					<p class="lead-text">
+						Classifier accuracy comparison using the same feature set, preprocessing, and holdout split.
+					</p>
+				</div>
+				<div class="page-actions">
+					<a href="/model-info" class="nav-link-button">Model info</a>
+					<a href="/prediction-history" class="nav-link-button">History</a>
+					<a href="/" class="nav-link-button">Back to predictor</a>
+				</div>
+			</div>
+
+			<div class="summary-grid">
+				<div class="summary-box">
+					<span class="summary-label">Best model</span>
+					<span class="summary-value">{{ comparison.best_model }}</span>
+				</div>
+				<div class="summary-box">
+					<span class="summary-label">Best accuracy</span>
+					<span class="summary-value">{{ comparison.best_accuracy }}%</span>
+				</div>
+				<div class="summary-box">
+					<span class="summary-label">Dataset rows</span>
+					<span class="summary-value">{{ comparison.dataset_rows }}</span>
+				</div>
+				<div class="summary-box">
+					<span class="summary-label">Test samples</span>
+					<span class="summary-value">{{ comparison.test_size }}</span>
+				</div>
+			</div>
+
+			<div class="comparison-panel">
+				<h2>Accuracy ranking</h2>
+				{% for result in comparison.results %}
+				<div class="model-row">
+					<div class="rank">{{ result.rank }}</div>
+					<div class="model-name">
+						{{ result.model }}
+						{% if result.is_current %}
+						<span class="current-badge">Current app model</span>
+						{% endif %}
+					</div>
+					<div class="accuracy-track" aria-hidden="true">
+						<div class="accuracy-fill" style="width: {{ result.bar_width }}%;"></div>
+					</div>
+					<div class="accuracy-value">{{ result.accuracy }}%</div>
+				</div>
+				{% endfor %}
+
+				<p class="note-text">
+					Split: {{ comparison.split_description }}. Preprocessing: {{ comparison.preprocessing }}.
+				</p>
+			</div>
+		</section>
+	</main>
+</body>
+
+</html>

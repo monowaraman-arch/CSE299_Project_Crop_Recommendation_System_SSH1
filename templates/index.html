@@ -129,6 +129,52 @@
 			font-size: 1.08rem;
 		}
 
+		.hero-actions-panel {
+			margin-top: 42px;
+			padding: 18px;
+			border-radius: 22px;
+			background: rgba(9, 34, 17, 0.22);
+			border: 1px solid rgba(255, 255, 255, 0.18);
+			box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+		}
+
+		.hero-actions-label {
+			display: block;
+			color: rgba(255, 255, 255, 0.72);
+			font-size: 0.78rem;
+			font-weight: 800;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			margin-bottom: 12px;
+		}
+
+		.hero-nav-links {
+			display: grid;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 10px;
+		}
+
+		.hero-nav-link {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			min-height: 48px;
+			padding: 11px 12px;
+			border-radius: 15px;
+			background: rgba(255, 255, 255, 0.16);
+			border: 1px solid rgba(255, 255, 255, 0.18);
+			color: #fff;
+			font-weight: 800;
+			text-decoration: none;
+			text-align: center;
+			line-height: 1.2;
+		}
+
+		.hero-nav-link:hover {
+			color: #173120;
+			background: rgba(255, 255, 255, 0.9);
+		}
+
 		.form-panel {
 			padding: 42px;
 			color: var(--text-dark);
@@ -140,6 +186,13 @@
 			text-transform: uppercase;
 			letter-spacing: 0.08em;
 			font-size: 0.85rem;
+		}
+
+		.form-heading-row {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 16px;
 		}
 
 		.form-panel h2 {
@@ -182,6 +235,13 @@
 			box-shadow: 0 0 0 0.2rem rgba(47, 158, 68, 0.18);
 		}
 
+		.field-hint {
+			margin-top: 8px;
+			color: var(--text-soft);
+			font-size: 0.84rem;
+			line-height: 1.35;
+		}
+
 		.cta-row {
 			display: flex;
 			align-items: center;
@@ -211,12 +271,45 @@
 			background: linear-gradient(135deg, var(--accent-dark), #46ad4d);
 		}
 
+		.report-actions {
+			display: flex;
+			justify-content: flex-end;
+			margin-top: 20px;
+		}
+
+		.btn-download-report {
+			border: 1px solid rgba(255, 255, 255, 0.25);
+			border-radius: 14px;
+			padding: 12px 18px;
+			font-weight: 800;
+			color: #163d25;
+			background: #fff;
+			box-shadow: 0 12px 24px rgba(0, 0, 0, 0.16);
+		}
+
+		.btn-download-report:hover {
+			background: #eef7ef;
+			color: #163d25;
+		}
+
+		.results-band {
+			padding: 0 42px 42px;
+			background:
+				linear-gradient(90deg,
+					rgba(31, 122, 52, 0.88) 0,
+					rgba(88, 163, 58, 0.78) 42%,
+					var(--panel-bg) 42%,
+					var(--panel-bg) 100%),
+				url("https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=1200&q=80") left center / 42% 100% no-repeat,
+				var(--panel-bg);
+		}
+
 		.results-panel {
-			margin-top: 28px;
-			padding: 24px;
+			padding: 32px 36px;
 			border-radius: 24px;
 			background: linear-gradient(135deg, #163d25, #224f2f);
 			box-shadow: 0 20px 45px rgba(18, 42, 26, 0.22);
+			overflow: visible;
 		}
 
 		.results-label {
@@ -241,7 +334,8 @@
 		.recommendations-grid {
 			display: grid;
 			grid-template-columns: repeat(3, minmax(0, 1fr));
-			gap: 14px;
+			gap: 18px;
+			align-items: stretch;
 		}
 
 		.recommendation-card {
@@ -255,7 +349,7 @@
 
 		.recommendation-card img {
 			width: 100%;
-			height: 150px;
+			height: 132px;
 			object-fit: cover;
 			display: block;
 		}
@@ -276,7 +370,7 @@
 		}
 
 		.recommendation-body {
-			padding: 16px;
+			padding: 14px;
 		}
 
 		.recommendation-body h4 {
@@ -313,6 +407,46 @@
 			background: linear-gradient(90deg, var(--accent), #76c043);
 		}
 
+		.card-section-title {
+			margin: 14px 0 8px;
+			color: var(--accent-dark);
+			font-size: 0.78rem;
+			font-weight: 800;
+			letter-spacing: 0.06em;
+			text-transform: uppercase;
+		}
+
+		.conditions-list {
+			display: grid;
+			gap: 7px;
+		}
+
+		.condition-row {
+			display: grid;
+			grid-template-columns: 82px minmax(0, 1fr);
+			gap: 8px;
+			align-items: start;
+			color: var(--text-soft);
+			font-size: 0.8rem;
+			line-height: 1.35;
+		}
+
+		.condition-label {
+			font-weight: 800;
+			color: var(--text-dark);
+		}
+
+		.condition-value {
+			overflow-wrap: anywhere;
+		}
+
+		.cultivation-note {
+			margin: 0;
+			color: var(--text-soft);
+			font-size: 0.82rem;
+			line-height: 1.4;
+		}
+
 		@media (max-width: 991.98px) {
 
 			.hero-panel,
@@ -320,7 +454,15 @@
 				padding: 32px 24px;
 			}
 
+			.results-band {
+				padding: 0 24px 32px;
+			}
+
 			.stats-strip {
+				grid-template-columns: 1fr;
+			}
+
+			.hero-nav-links {
 				grid-template-columns: 1fr;
 			}
 
@@ -339,8 +481,18 @@
 				padding: 24px 18px;
 			}
 
+			.results-band {
+				padding: 0 18px 24px;
+			}
+
 			.form-panel h2 {
 				font-size: 1.6rem;
+			}
+
+			.form-heading-row {
+				align-items: flex-start;
+				flex-direction: column;
+				gap: 8px;
 			}
 
 			.btn-recommend {
@@ -349,6 +501,14 @@
 
 			.results-panel {
 				padding: 18px;
+			}
+
+			.report-actions {
+				justify-content: stretch;
+			}
+
+			.btn-download-report {
+				width: 100%;
 			}
 		}
 	</style>
@@ -380,11 +540,21 @@
 								<strong>Best crop match</strong>
 							</div>
 						</div>
+						<div class="hero-actions-panel">
+							<span class="hero-actions-label">Project Pages</span>
+							<div class="hero-nav-links">
+								<a href="/model-info" class="hero-nav-link">Model Info</a>
+								<a href="/model-comparison" class="hero-nav-link">Compare Models</a>
+								<a href="/prediction-history" class="hero-nav-link">History</a>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div class="col-lg-7">
 					<div class="form-panel">
-						<div class="section-tag">Crop Recommendation System</div>
+						<div class="form-heading-row">
+							<div class="section-tag">Crop Recommendation System</div>
+						</div>
 						<h2>Enter your field data</h2>
 						<p class="lead-text">
 							Fill in the values below to predict the most suitable crop for cultivation.
@@ -396,24 +566,30 @@
 									<div class="field-card">
 										<label for="Nitrogen" class="form-label">Nitrogen</label>
 										<input type="number" id="Nitrogen" name="Nitrogen"
-											placeholder="Enter nitrogen value" class="form-control" required step="0"
+											placeholder="Enter nitrogen value" class="form-control" required min="0"
+											max="140" step="1" title="Accepted range: 0 to 140"
 											value="{{ form_values.get('Nitrogen', '') }}">
+										<div class="field-hint">Range: {{ field_range_hints.get('Nitrogen') }}</div>
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="field-card">
 										<label for="Phosporus" class="form-label">Phosphorus</label>
 										<input type="number" id="Phosporus" name="Phosporus"
-											placeholder="Enter phosphorus value" class="form-control" required step="0"
+											placeholder="Enter phosphorus value" class="form-control" required min="5"
+											max="145" step="1" title="Accepted range: 5 to 145"
 											value="{{ form_values.get('Phosporus', '') }}">
+										<div class="field-hint">Range: {{ field_range_hints.get('Phosporus') }}</div>
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="field-card">
 										<label for="Potassium" class="form-label">Potassium</label>
 										<input type="number" id="Potassium" name="Potassium"
-											placeholder="Enter potassium value" class="form-control" required step="0"
+											placeholder="Enter potassium value" class="form-control" required min="5"
+											max="205" step="1" title="Accepted range: 5 to 205"
 											value="{{ form_values.get('Potassium', '') }}">
+										<div class="field-hint">Range: {{ field_range_hints.get('Potassium') }}</div>
 									</div>
 								</div>
 								<div class="col-md-6">
@@ -421,31 +597,42 @@
 										<label for="Temperature" class="form-label">Temperature</label>
 										<input type="number" id="Temperature" name="Temperature"
 											placeholder="Enter temperature in C" class="form-control" required
-											step="0.01" value="{{ form_values.get('Temperature', '') }}">
+											min="8.825674745" max="43.67549305" step="any"
+											title="Accepted range: 8.83 to 43.68 C"
+											value="{{ form_values.get('Temperature', '') }}">
+										<div class="field-hint">Range: {{ field_range_hints.get('Temperature') }}</div>
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="field-card">
 										<label for="Humidity" class="form-label">Humidity</label>
 										<input type="number" id="Humidity" name="Humidity"
-											placeholder="Enter humidity in %" class="form-control" required step="0.01"
+											placeholder="Enter humidity in %" class="form-control" required
+											min="14.25803981" max="99.98187601" step="any"
+											title="Accepted range: 14.26 to 99.98%"
 											value="{{ form_values.get('Humidity', '') }}">
+										<div class="field-hint">Range: {{ field_range_hints.get('Humidity') }}</div>
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="field-card">
 										<label for="Ph" class="form-label">pH</label>
 										<input type="number" id="Ph" name="Ph" placeholder="Enter pH value"
-											class="form-control" required step="0.01"
+											class="form-control" required min="3.504752314" max="9.93509073" step="any"
+											title="Accepted range: 3.5 to 9.94"
 											value="{{ form_values.get('Ph', '') }}">
+										<div class="field-hint">Range: {{ field_range_hints.get('Ph') }}</div>
 									</div>
 								</div>
 								<div class="col-12">
 									<div class="field-card">
 										<label for="Rainfall" class="form-label">Rainfall</label>
 										<input type="number" id="Rainfall" name="Rainfall"
-											placeholder="Enter rainfall in mm" class="form-control" required step="0.01"
+											placeholder="Enter rainfall in mm" class="form-control" required
+											min="20.21126747" max="298.5601175" step="any"
+											title="Accepted range: 20.21 to 298.56 mm"
 											value="{{ form_values.get('Rainfall', '') }}">
+										<div class="field-hint">Range: {{ field_range_hints.get('Rainfall') }}</div>
 									</div>
 								</div>
 							</div>
@@ -463,38 +650,59 @@
 							{{ error }}
 						</div>
 						{% endif %}
-
-						{% if recommendations %}
-						<div class="results-panel">
-							<div class="results-label">Prediction Result</div>
-							<h3>Top 3 crop recommendations</h3>
-							<p class="results-helper">
-								These are the crops with the highest prediction confidence for your field data.
-							</p>
-							<div class="recommendations-grid">
-								{% for recommendation in recommendations %}
-								<div class="recommendation-card">
-									<div class="rank-badge">#{{ recommendation.rank }}</div>
-									<img src="{{ recommendation.image_url }}" alt="{{ recommendation.crop }} crop image">
-									<div class="recommendation-body">
-										<h4>{{ recommendation.crop }}</h4>
-										<div class="confidence-row">
-											<span>Prediction confidence</span>
-											<span class="confidence-value">{{ recommendation.confidence }}%</span>
-										</div>
-										<div class="confidence-bar" aria-hidden="true">
-											<div class="confidence-fill"
-												style="width: {{ recommendation.confidence }}%;"></div>
-										</div>
-									</div>
-								</div>
-								{% endfor %}
-							</div>
-						</div>
-						{% endif %}
 					</div>
 				</div>
 			</div>
+			{% if recommendations %}
+			<div class="results-band">
+				<div class="results-panel">
+					<div class="results-label">Prediction Result</div>
+					<h3>Top 3 crop recommendations</h3>
+					<p class="results-helper">
+						These are the crops with the highest prediction confidence for your field data.
+					</p>
+					<div class="recommendations-grid">
+						{% for recommendation in recommendations %}
+						<div class="recommendation-card">
+							<div class="rank-badge">#{{ recommendation.rank }}</div>
+							<img src="{{ recommendation.image_url }}" alt="{{ recommendation.crop }} crop image">
+							<div class="recommendation-body">
+								<h4>{{ recommendation.crop }}</h4>
+								<div class="confidence-row">
+									<span>Prediction confidence</span>
+									<span class="confidence-value">{{ recommendation.confidence }}%</span>
+								</div>
+								<div class="confidence-bar" aria-hidden="true">
+									<div class="confidence-fill" style="width: {{ recommendation.confidence }}%;"></div>
+								</div>
+								<div class="card-section-title">Ideal conditions</div>
+								<div class="conditions-list">
+									{% for condition in recommendation.ideal_conditions %}
+									<div class="condition-row">
+										<span class="condition-label">{{ condition.label }}</span>
+										<span class="condition-value">{{ condition.value }}</span>
+									</div>
+									{% endfor %}
+								</div>
+								<div class="card-section-title">Cultivation note</div>
+								<p class="cultivation-note">{{ recommendation.cultivation_note }}</p>
+							</div>
+						</div>
+						{% endfor %}
+					</div>
+					<form action="/download-report" method="POST" class="report-actions">
+						<input type="hidden" name="Nitrogen" value="{{ form_values.get('Nitrogen', '') }}">
+						<input type="hidden" name="Phosporus" value="{{ form_values.get('Phosporus', '') }}">
+						<input type="hidden" name="Potassium" value="{{ form_values.get('Potassium', '') }}">
+						<input type="hidden" name="Temperature" value="{{ form_values.get('Temperature', '') }}">
+						<input type="hidden" name="Humidity" value="{{ form_values.get('Humidity', '') }}">
+						<input type="hidden" name="Ph" value="{{ form_values.get('Ph', '') }}">
+						<input type="hidden" name="Rainfall" value="{{ form_values.get('Rainfall', '') }}">
+						<button type="submit" class="btn btn-download-report">Download PDF Report</button>
+					</form>
+				</div>
+			</div>
+			{% endif %}
 		</section>
 	</main>
 
