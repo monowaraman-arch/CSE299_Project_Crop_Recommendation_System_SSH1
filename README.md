@@ -1,9 +1,9 @@
 # Crop Recommendation System
 
 ## Overview
-This project is a machine learning based crop recommendation system built with Python, Flask, Pandas, and scikit-learn. It predicts the most suitable crop from soil nutrient and environmental values entered by the user.
+This project is a machine learning based crop recommendation system built with Python, Flask, and scikit-learn. It predicts the most suitable crop from soil and environmental conditions entered by the user.
 
-The application uses these 7 input features:
+The system uses the following input features:
 - Nitrogen (`N`)
 - Phosphorus (`P`)
 - Potassium (`K`)
@@ -12,55 +12,38 @@ The application uses these 7 input features:
 - pH
 - Rainfall
 
-The predicted result is one of 22 crop classes, including Rice, Maize, Mango, Coffee, Coconut, and others.
+The predicted output is one of 22 crop classes, such as Rice, Coconut, Mango, Coffee, and others.
 
-## Features
-- Flask web interface for entering field conditions
-- Trained model loaded from saved `.pkl` artifacts
-- Prediction result shown with a crop-specific image when available
-- Form validation for required numeric values
-- Automatic rebuilding of model artifacts from the CSV dataset if saved pickles are incompatible with the installed scikit-learn version
-
-## Tech Stack
-- Python
-- Flask
-- NumPy
-- Pandas
-- scikit-learn
-- Bootstrap 5
-
-## Main Files
-- `app.py`: Flask app, model loading, preprocessing, prediction, and image lookup
-- `templates/index.html`: Frontend form and prediction result UI
-- `Crop Classification With Recommendation System.ipynb`: Notebook for dataset analysis, preprocessing, model comparison, and training
-- `Crop_recommendation.csv`: Dataset used for training and evaluation
-- `model.pkl`: Saved trained classifier
-- `minmaxscaler.pkl`: Saved `MinMaxScaler`
-- `standscaler.pkl`: Saved `StandardScaler`
-- `static/crops/`: Crop images used by the UI
+## Main Components
+- `app.py`: Flask application for loading the trained model, accepting form input, running prediction, and showing the result.
+- `templates/index.html`: User interface for entering field values and displaying the recommended crop.
+- `Crop Classification With Recommendation System.ipynb`: Jupyter notebook used for dataset review, feature analysis, preprocessing, model comparison, and training.
+- `Crop_recommendation.csv`: Dataset used for training and evaluation.
+- `model.pkl`, `minmaxscaler.pkl`, `standscaler.pkl`: Saved model and preprocessing artifacts.
+- `static/crops/`: Local crop images shown in the result card.
 
 ## Dataset Summary
-The dataset in `Crop_recommendation.csv` contains:
+The dataset contains:
 - `2200` rows
 - `8` columns
 - `7` input features
 - `1` target column: `label`
-- `22` crop classes
 
-The current dataset also appears to have:
+Dataset quality checks in the notebook showed:
 - no missing values
 - no duplicate rows
-- balanced classes with `100` samples per crop
+- balanced classes, with `100` samples for each crop
 
 ## Machine Learning Workflow
-The notebook covers:
-- dataset inspection
-- class distribution and feature analysis
-- label encoding
-- feature scaling with `MinMaxScaler` and `StandardScaler`
-- train/test split
-- classifier comparison
-- saving trained artifacts for deployment
+The notebook performs the following steps:
+- load and inspect the dataset
+- check data types, null values, and duplicates
+- analyze feature ranges and class distribution
+- encode crop labels into numeric classes
+- split the dataset into training and testing sets
+- scale the features using `MinMaxScaler` and `StandardScaler`
+- train and compare multiple classification algorithms
+- save the final trained model and scaler files for deployment
 
 Models compared in the notebook include:
 - Logistic Regression
@@ -72,47 +55,53 @@ Models compared in the notebook include:
 - Bagging
 - AdaBoost
 - Gradient Boosting
+- Extra Trees
 
-The deployed application rebuilds artifacts with a `RandomForestClassifier` when the existing pickle files cannot be loaded safely.
+## Web Application Features
+- simple form-based crop recommendation
+- input validation for required numeric fields
+- prediction result displayed in the UI
+- crop-specific image support from the local `static/crops` folder
+- automatic fallback to `default` crop image if a specific one is missing
+- automatic rebuilding of model artifacts from the dataset if incompatible pickle files are detected
+
+## Application Preview
+![Crop recommendation result page](Screenshots/crop-recommendation-result-page.png)
 
 ## Project Structure
 ```text
 .
-|-- app.py
-|-- Crop Classification With Recommendation System.ipynb
-|-- Crop_recommendation.csv
-|-- model.pkl
-|-- minmaxscaler.pkl
-|-- standscaler.pkl
-|-- requirements.txt
-|-- README.md
-|-- templates/
-|   `-- index.html
-`-- static/
-    `-- crops/
+├── app.py
+├── Crop Classification With Recommendation System.ipynb
+├── Crop_recommendation.csv
+├── model.pkl
+├── minmaxscaler.pkl
+├── standscaler.pkl
+├── requirements.txt
+├── templates/
+│   └── index.html
+└── static/
+    └── crops/
 ```
 
 ## Installation
-### Windows PowerShell
-Create and activate a virtual environment, then install dependencies:
+Open the project folder in PowerShell or the VS Code terminal, then install the dependencies:
 
 ```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
+& "C:\Users\user\AppData\Local\Programs\Python\Python312\python.exe" -m pip install -r requirements.txt
 ```
 
-If `python` is not available on your PATH, you can use the virtual environment interpreter directly after creating `.venv`:
+If `python` works normally on your machine, this also works:
 
 ```powershell
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 ## Run the Application
 Start the Flask app with:
 
 ```powershell
-.\.venv\Scripts\python.exe app.py
+& "C:\Users\user\AppData\Local\Programs\Python\Python312\python.exe" app.py
 ```
 
 Then open:
@@ -124,13 +113,21 @@ http://127.0.0.1:5001
 ## Crop Images
 Crop result images are loaded from `static/crops/`.
 
-Supported file extensions:
+The app supports these file extensions:
 - `.png`
 - `.jpg`
 - `.jpeg`
 - `.webp`
 
-Expected crop image base names in the app:
+Use the crop name as the image filename. Examples:
+- `rice.png`
+- `coconut.png`
+- `mango.png`
+- `coffee.png`
+
+If a crop image is not found, the app falls back to a default image.
+
+Expected crop image base names:
 - `rice`
 - `maize`
 - `jute`
@@ -154,23 +151,15 @@ Expected crop image base names in the app:
 - `chickpea`
 - `coffee`
 
-Notes:
-- The repository currently includes many crop images in `static/crops/`, but not every expected filename is present.
-- The folder currently contains `mothbean.png`, while the app looks for `mothbeans.*` for that crop class.
-- The code supports a `default` fallback image, but this repository does not currently include a `default.png`, `default.jpg`, `default.jpeg`, or `default.webp` file.
-
 ## Notes
 - The web app predicts one crop label from 7 user inputs.
-- `app.py` runs with `debug=True`, which is fine for local development but should be disabled before deployment.
-- The page also uses remote assets for Google Fonts, Bootstrap CDN, and background images, so those visuals depend on internet access.
+- The model artifacts can be regenerated automatically from the CSV if older pickle files are incompatible with the installed scikit-learn version.
+- The current Flask setup uses `debug=True`, which is fine for development but should be changed before deployment.
 
 ## Requirements
-Dependencies are listed in `requirements.txt`:
-- `Flask>=3.0,<4.0`
-- `numpy>=1.26,<3.0`
-- `pandas>=2.2,<3.0`
-- `scikit-learn>=1.4,<2.0`
+Dependencies are listed in [`requirements.txt`](/c:/Users/user/Downloads/Lecture%20Slides%20of%20Semesters/Spring26%20-%20261/CSE299%20-%20Junior%20Design/Crop-Recommendation-System-Using-Machine-Learning-main/Crop-Recommendation-System-Using-Machine-Learning-main/requirements.txt):
+- Flask
+- NumPy
+- Pandas
+- scikit-learn
 
-## Contact
-For project-related questions:
-- `611noorsaeed@gmail.com`

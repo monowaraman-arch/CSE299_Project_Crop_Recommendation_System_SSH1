@@ -211,67 +211,106 @@
 			background: linear-gradient(135deg, var(--accent-dark), #46ad4d);
 		}
 
-		.result-card {
+		.results-panel {
 			margin-top: 28px;
-			border: none;
+			padding: 24px;
 			border-radius: 24px;
-			overflow: hidden;
 			background: linear-gradient(135deg, #163d25, #224f2f);
 			box-shadow: 0 20px 45px rgba(18, 42, 26, 0.22);
 		}
 
-		.result-card img {
-			height: 220px;
-			object-fit: cover;
-		}
-
-		.result-card .image-fallback {
-			height: 220px;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			padding: 24px;
-			background:
-				linear-gradient(135deg, rgba(45, 120, 57, 0.92), rgba(20, 68, 33, 0.96)),
-				radial-gradient(circle at top left, rgba(255, 255, 255, 0.12), transparent 45%);
-			color: rgba(255, 255, 255, 0.9);
-			font-family: "Outfit", sans-serif;
-			font-size: 1.3rem;
-			letter-spacing: 0.03em;
-			text-align: center;
-		}
-
-		.result-card .card-body {
-			padding: 24px;
-		}
-
-		.result-label {
+		.results-label {
 			color: rgba(255, 255, 255, 0.72);
 			text-transform: uppercase;
 			letter-spacing: 0.08em;
 			font-size: 0.8rem;
 		}
 
-		.result-card .card-title {
+		.results-panel h3 {
 			font-family: "Outfit", sans-serif;
-			font-size: 1.55rem;
+			font-size: 1.45rem;
 			margin: 8px 0 12px;
+			color: #fff;
 		}
 
-		.result-card .card-text {
-			margin: 0;
-			color: rgba(255, 255, 255, 0.88);
-			font-size: 1rem;
+		.results-helper {
+			margin: 0 0 18px;
+			color: rgba(255, 255, 255, 0.76);
 		}
 
-		.result-credit {
-			margin-top: 14px;
-			font-size: 0.88rem;
-			color: rgba(255, 255, 255, 0.72);
+		.recommendations-grid {
+			display: grid;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 14px;
 		}
 
-		.result-credit a {
-			color: rgba(255, 255, 255, 0.92);
+		.recommendation-card {
+			position: relative;
+			overflow: hidden;
+			border-radius: 18px;
+			background: rgba(255, 255, 255, 0.95);
+			color: var(--text-dark);
+			box-shadow: 0 14px 30px rgba(0, 0, 0, 0.16);
+		}
+
+		.recommendation-card img {
+			width: 100%;
+			height: 150px;
+			object-fit: cover;
+			display: block;
+		}
+
+		.rank-badge {
+			position: absolute;
+			top: 12px;
+			left: 12px;
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+			display: grid;
+			place-items: center;
+			background: rgba(23, 49, 32, 0.9);
+			color: #fff;
+			font-weight: 800;
+			font-family: "Outfit", sans-serif;
+		}
+
+		.recommendation-body {
+			padding: 16px;
+		}
+
+		.recommendation-body h4 {
+			font-family: "Outfit", sans-serif;
+			font-size: 1.18rem;
+			margin: 0 0 8px;
+		}
+
+		.confidence-row {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 10px;
+			color: var(--text-soft);
+			font-size: 0.92rem;
+			font-weight: 700;
+		}
+
+		.confidence-value {
+			color: var(--accent-dark);
+		}
+
+		.confidence-bar {
+			height: 9px;
+			margin-top: 10px;
+			border-radius: 999px;
+			background: rgba(31, 122, 52, 0.12);
+			overflow: hidden;
+		}
+
+		.confidence-fill {
+			height: 100%;
+			border-radius: inherit;
+			background: linear-gradient(90deg, var(--accent), #76c043);
 		}
 
 		@media (max-width: 991.98px) {
@@ -282,6 +321,10 @@
 			}
 
 			.stats-strip {
+				grid-template-columns: 1fr;
+			}
+
+			.recommendations-grid {
 				grid-template-columns: 1fr;
 			}
 		}
@@ -302,6 +345,10 @@
 
 			.btn-recommend {
 				width: 100%;
+			}
+
+			.results-panel {
+				padding: 18px;
 			}
 		}
 	</style>
@@ -417,23 +464,31 @@
 						</div>
 						{% endif %}
 
-						{% if result %}
-						<div class="card result-card text-white">
-							{% if result_image_url %}
-							<img src="{{ result_image_url }}" class="card-img-top" alt="{{ result_crop }} crop image">
-							{% else %}
-							<div class="image-fallback">{{ result_crop }} image unavailable</div>
-							{% endif %}
-							<div class="card-body">
-								<div class="result-label">Prediction Result</div>
-								<h5 class="card-title">Recommended crop: {{ result_crop }}</h5>
-								<p class="card-text">{{ result }}</p>
-								{% if result_image_is_default %}
-								<p class="result-credit">
-									Add a file named <strong>{{ result_crop|lower|replace(' ', '') }}.jpg</strong> in
-									<strong>static/crops</strong> to replace the default image for this crop.
-								</p>
-								{% endif %}
+						{% if recommendations %}
+						<div class="results-panel">
+							<div class="results-label">Prediction Result</div>
+							<h3>Top 3 crop recommendations</h3>
+							<p class="results-helper">
+								These are the crops with the highest prediction confidence for your field data.
+							</p>
+							<div class="recommendations-grid">
+								{% for recommendation in recommendations %}
+								<div class="recommendation-card">
+									<div class="rank-badge">#{{ recommendation.rank }}</div>
+									<img src="{{ recommendation.image_url }}" alt="{{ recommendation.crop }} crop image">
+									<div class="recommendation-body">
+										<h4>{{ recommendation.crop }}</h4>
+										<div class="confidence-row">
+											<span>Prediction confidence</span>
+											<span class="confidence-value">{{ recommendation.confidence }}%</span>
+										</div>
+										<div class="confidence-bar" aria-hidden="true">
+											<div class="confidence-fill"
+												style="width: {{ recommendation.confidence }}%;"></div>
+										</div>
+									</div>
+								</div>
+								{% endfor %}
 							</div>
 						</div>
 						{% endif %}

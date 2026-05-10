@@ -66,7 +66,7 @@ CROP_IMAGE_BASENAMES = {
     "Lentil": "lentil",
     "Blackgram": "blackgram",
     "Mungbean": "mungbean",
-    "Mothbeans": "mothbeans",
+    "Mothbeans": "mothbean",
     "Pigeonpeas": "pigeonpeas",
     "Kidneybeans": "kidneybeans",
     "Chickpea": "chickpea",
@@ -181,7 +181,7 @@ def parse_form_values(form):
     return values
 
 
-def predict_crop(values):
+def build_features(values):
     features = pd.DataFrame(
         [
             {
@@ -200,14 +200,53 @@ def predict_crop(values):
     if scaler_after_minmax is not None:
         transformed = scaler_after_minmax.transform(transformed)
 
-    prediction = model.predict(transformed)[0]
+    return transformed
 
+
+def class_to_crop_name(prediction):
     if isinstance(prediction, str):
         return prediction.title()
     if prediction in CROP_DICT:
         return CROP_DICT[prediction]
 
     raise ValueError("The trained model returned an unknown crop class.")
+
+
+def predict_top_crops(values, limit=3):
+    transformed = build_features(values)
+
+    if not hasattr(model, "predict_proba"):
+        crop_name = class_to_crop_name(model.predict(transformed)[0])
+        image_data = get_crop_image_data(crop_name)
+        return [
+            {
+                "rank": 1,
+                "crop": crop_name,
+                "confidence": 100.0,
+                "image_url": image_data["image_url"],
+                "image_is_default": image_data["is_default"],
+            }
+        ]
+
+    probabilities = model.predict_proba(transformed)[0]
+    classes = model.classes_
+    top_indexes = np.argsort(probabilities)[::-1][:limit]
+    recommendations = []
+
+    for rank, index in enumerate(top_indexes, start=1):
+        crop_name = class_to_crop_name(classes[index])
+        image_data = get_crop_image_data(crop_name)
+        recommendations.append(
+            {
+                "rank": rank,
+                "crop": crop_name,
+                "confidence": round(float(probabilities[index]) * 100, 2),
+                "image_url": image_data["image_url"],
+                "image_is_default": image_data["is_default"],
+            }
+        )
+
+    return recommendations
 
 
 def get_crop_image_data(crop_name):
@@ -241,10 +280,7 @@ def index():
     return render_template(
         "index.html",
         form_values={},
-        result=None,
-        result_crop=None,
-        result_image_url=None,
-        result_image_is_default=False,
+        recommendations=[],
         error=None,
     )
 
@@ -255,40 +291,29 @@ def predict():
 
     try:
         parsed_values = parse_form_values(request.form)
-        crop_name = predict_crop(parsed_values)
+        recommendations = predict_top_crops(parsed_values)
     except ValueError as exc:
         return render_template(
             "index.html",
             form_values=form_values,
-            result=None,
-            result_crop=None,
-            result_image_url=None,
-            result_image_is_default=False,
+            recommendations=[],
             error=str(exc),
         )
     except Exception:
         return render_template(
             "index.html",
             form_values=form_values,
-            result=None,
-            result_crop=None,
-            result_image_url=None,
-            result_image_is_default=False,
+            recommendations=[],
             error="Prediction failed. Check that the saved model and scaler files match the training pipeline.",
         )
 
-    result = f"{crop_name} is the best crop to be cultivated right there."
-    image_data = get_crop_image_data(crop_name)
     return render_template(
         "index.html",
         form_values=form_values,
-        result=result,
-        result_crop=crop_name,
-        result_image_url=image_data["image_url"],
-        result_image_is_default=image_data["is_default"],
+        recommendations=recommendations,
         error=None,
     )
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="127.0.0.1", port=5001)
